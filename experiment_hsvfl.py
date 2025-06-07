@@ -245,82 +245,73 @@ def run_experiment(attack_ratio=0.0, num_rounds=100, num_users=100, selected_per
 
 
 def plot_results(results, attack_ratio):
-    """可视化实验结果"""
+    """可视化实验结果 - Times New Roman字体，PDF输出"""
+    # 设置Times New Roman字体
+    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['font.size'] = 22
+    plt.rcParams['axes.titlesize'] = 24
+    plt.rcParams['axes.labelsize'] = 22
+
     plt.figure(figsize=(32, 24))
-    plt.rcParams['font.size'] = 20
-    plt.rcParams['axes.titlesize'] = 22
-    plt.rcParams['axes.labelsize'] = 20
     plt.subplots_adjust(left=0.07, right=0.93, bottom=0.1, top=0.95, hspace=0.35, wspace=0.15)
 
     # 准确率对比
     ax1 = plt.subplot(2, 2, 1)
-    plt.plot(results['HSFL_acc'], 'b-', label='HSFL', marker='o', markersize=8)
-    plt.plot(results['HSVFL_acc'], 'r-', label='HSVFL', marker='x', markersize=8)
-    ax1.set_title(f'(a) Test Accuracy (Attack Ratio: {attack_ratio * 100}%)', fontsize=22, y=-0.15)
-    ax1.set_xlabel('Communication Round')
-    ax1.set_ylabel('Accuracy')
-    ax1.legend()
+    plt.plot(results['HSFL_acc'], 'b-', label='HSFL', marker='o', markersize=10)
+    plt.plot(results['HSVFL_acc'], 'r-', label='HSVFL', marker='x', markersize=10)
+    ax1.set_title(f'(a) Test Accuracy (Attack Ratio: {attack_ratio * 100}%)', fontsize=24, y=-0.15, fontweight='bold')
+    ax1.set_xlabel('Communication Round', fontsize=22)
+    ax1.set_ylabel('Accuracy', fontsize=22)
+    ax1.legend(prop={'family': 'Times New Roman'})
     ax1.grid(True)
     ax1.set_ylim(0, 1)
-
-    # # 时间开销对比
-    # ax3 = plt.subplot(3, 2, 2)
-    # plt.plot(results['HSFL_time'], 'b-', label='HSFL', marker='o', markersize=8)
-    # plt.plot(results['HSVFL_time'], 'r-', label='HSVFL', marker='x', markersize=8)
-    # ax3.set_title('(b) Computation Time per Round', fontsize=22)
-    # ax3.set_xlabel('Communication Round')
-    # ax3.set_ylabel('Time (seconds)')
-    # ax3.legend()
-    # ax3.grid(True)
-    #
-    # # 通信开销对比
-    # ax2 = plt.subplot(3, 2, 3)
-    # plt.plot(np.cumsum(results['HSFL_comm']), 'b-', label='HSFL')
-    # plt.plot(np.cumsum(results['HSVFL_comm']), 'r-', label='HSVFL')
-    # ax2.set_title('(c) Cumulative Communication Cost (Bytes)', fontsize=22)
-    # ax2.set_xlabel('Communication Round')
-    # ax2.set_ylabel('Total Bytes')
-    # ax2.legend()
-    # ax2.grid(True)
 
     # 安全性能展示
     ax4 = plt.subplot(2, 2, 2)
     if attack_ratio > 0:
-        plt.plot(results['HSVFL_detection'], 'g-', label='Malicious Update Detection Rate', linewidth=3)
+        plt.plot(results['HSVFL_detection'], 'g-', label='Malicious Update Detection Rate',
+                 linewidth=3, marker='^', markersize=10)
         plt.axhline(y=np.mean(results['HSVFL_detection']), color='m', linestyle='--',
-                    label=f'Avg: {np.mean(results["HSVFL_detection"]):.2f}')
+                    label=f'Avg: {np.mean(results["HSVFL_detection"]):.2f}', linewidth=3)
         plt.ylim(0, 1)
-        ax4.set_title('(b) Security Performance', fontsize=22, y=-0.15)
-        ax4.set_xlabel('Communication Round')
-        ax4.set_ylabel('Detection Rate')
-        ax4.legend()
+        ax4.set_title('(b) Security Performance', fontsize=24, y=-0.15, fontweight='bold')
+        ax4.set_xlabel('Communication Round', fontsize=22)
+        ax4.set_ylabel('Detection Rate', fontsize=22)
+        ax4.legend(prop={'family': 'Times New Roman'})
         ax4.grid(True)
 
     # 恶意攻击影响对比
     ax5 = plt.subplot(2, 2, 3)
     hsfl_drop = [max(results['HSFL_acc']) - acc for acc in results['HSFL_acc']]
     hsvfl_drop = [max(results['HSVFL_acc']) - acc for acc in results['HSVFL_acc']]
-    plt.plot(hsfl_drop, 'b-', label='HSFL Accuracy Drop', marker='o', markersize=8)
-    plt.plot(hsvfl_drop, 'r-', label='HSVFL Accuracy Drop', marker='x', markersize=8)
-    ax5.set_title('(c) Accuracy Drop Due to Attacks', fontsize=22, y=-0.15)
-    ax5.set_xlabel('Communication Round')
-    ax5.set_ylabel('Accuracy Drop')
-    ax5.legend()
+    plt.plot(hsfl_drop, 'b-', label='HSFL Accuracy Drop', marker='o', markersize=10)
+    plt.plot(hsvfl_drop, 'r-', label='HSVFL Accuracy Drop', marker='x', markersize=10)
+    ax5.set_title('(c) Accuracy Drop Due to Attacks', fontsize=24, y=-0.15, fontweight='bold')
+    ax5.set_xlabel('Communication Round', fontsize=22)
+    ax5.set_ylabel('Accuracy Drop', fontsize=22)
+    ax5.legend(prop={'family': 'Times New Roman'})
     ax5.grid(True)
 
     # 检测率与准确率关系
     ax6 = plt.subplot(2, 2, 4)
     if attack_ratio > 0:
         scatter = ax6.scatter(results['HSVFL_detection'], results['HSVFL_acc'],
-                              c=range(len(results['HSVFL_acc'])), cmap='viridis', s=100)
-        ax6.set_title('(d) Detection Rate vs Accuracy', fontsize=22, y=-0.15)
-        ax6.set_xlabel('Detection Rate')
-        ax6.set_ylabel('Accuracy')
+                              c=range(len(results['HSVFL_acc'])), cmap='viridis', s=150)
+        ax6.set_title('(d) Detection Rate vs Accuracy', fontsize=24, y=-0.15, fontweight='bold')
+        ax6.set_xlabel('Detection Rate', fontsize=22)
+        ax6.set_ylabel('Accuracy', fontsize=22)
         ax6.grid(True)
-        plt.colorbar(scatter, ax=ax6, label='Round Index')
+        cbar = plt.colorbar(scatter, ax=ax6, label='Round Index')
+        cbar.ax.tick_params(labelsize=18)  # 设置colorbar刻度字体大小
+        cbar.set_label('Round Index', fontsize=20)  # 设置colorbar标题字体大小
+        # 确保colorbar使用Times New Roman字体
+        for text in cbar.ax.get_yticklabels():
+            text.set_family("Times New Roman")
+            text.set_size(18)
 
     plt.tight_layout()
-    plt.savefig(f'comparison_attack_{attack_ratio}.png', dpi=300)
+    # 保存为PDF矢量图
+    plt.savefig(f'comparison_attack_{attack_ratio}.pdf', dpi=300, bbox_inches='tight')
     plt.show()
 
 
@@ -332,10 +323,10 @@ def main():
     results_10p_attack = run_experiment(attack_ratio=0.05, num_rounds=100)
     plot_results(results_10p_attack, 0.05)
 
-    # # 实验3: 30%恶意用户
-    # print("\nRunning experiment with 30% malicious users...")
-    # results_30p_attack = run_experiment(attack_ratio=0.3, num_rounds=100)
-    # plot_results(results_30p_attack, 0.3)
+    # 实验3: 30%恶意用户
+    print("\nRunning experiment with 30% malicious users...")
+    results_30p_attack = run_experiment(attack_ratio=0.3, num_rounds=100)
+    plot_results(results_30p_attack, 0.3)
 
     # # 实验4: 80%恶意用户
     # print("\nRunning experiment with 80% malicious users...")

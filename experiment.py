@@ -141,7 +141,7 @@ class ExperimentRunner:
         return self.results
 
 
-if __name__ == "__main__":
+def main():
     config0 = {
         'rounds': 100,
         'k': 10,
@@ -152,19 +152,19 @@ if __name__ == "__main__":
 
     runner = ExperimentRunner(config0)
     results = runner.run()
-    torch.save(results, 'experiment_results0.pt')
+    torch.save(results, 'experiment_results.pt')
 
-    config1 = {
-        'rounds': 100,
-        'k': 10,
-        'data_dist': 'noniid',
-        'selection_scheme': 'MAB-BC-BN2',
-        'model_type': 'AlexNet'
-    }
-
-    runner = ExperimentRunner(config1)
-    results = runner.run()
-    torch.save(results, 'experiment_results1.pt')
+    # config1 = {
+    #     'rounds': 100,
+    #     'k': 10,
+    #     'data_dist': 'iid',
+    #     'selection_scheme': 'MAB-BC-BN2',
+    #     'model_type': 'AlexNet'
+    # }
+    #
+    # runner = ExperimentRunner(config1)
+    # results = runner.run()
+    # torch.save(results, 'experiment_results1.pt')
 
     config2 = {
         'rounds': 100,
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     config3 = {
         'rounds': 100,
         'k': 10,
-        'data_dist': 'iid',
+        'data_dist': 'noniid',
         'selection_scheme': 'MAB-BC-BN2',
         'model_type': 'AlexNet'
     }
@@ -190,3 +190,6 @@ if __name__ == "__main__":
     results = runner.run()
     torch.save(results, 'experiment_results3.pt')
 
+
+if __name__ == "__main__":
+    main()

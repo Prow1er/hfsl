@@ -61,9 +61,10 @@ class SignatureVerificationExperiment:
                 behavior_type = np.random.choice(['tamper', 'invalid_signature', 'replay'])
 
                 if behavior_type == 'tamper':
-                    # 篡改消息内容
-                    message = f"Malicious_{user_id}_{np.random.rand()}".encode('utf-8')
-                    signature = self.pki.sign(user_id, message)
+                    pass
+                    # # 篡改消息内容
+                    # message = f"Malicious_{user_id}_{np.random.rand()}".encode('utf-8')
+                    # signature = self.pki.sign(user_id, message)
                 elif behavior_type == 'invalid_signature':
                     # 使用无效签名
                     signature = b'invalid_signature' + str(np.random.rand()).encode()
@@ -133,13 +134,15 @@ class SignatureVerificationExperiment:
                   f"TrustDiff={trust_diff:.2f}, MaliciousDetected={np.sum(pred_labels == 1)}")
 
     def plot_results(self):
-        """可视化实验结果"""
-        plt.figure(figsize=(48, 27))  # 增加高度为底部标题预留空间
+        """可视化实验结果 - Times New Roman字体，PDF输出"""
+        # 设置Times New Roman字体
+        plt.rcParams['font.family'] = 'Times New Roman'
         plt.rcParams['font.size'] = 20
         plt.rcParams['axes.titlesize'] = 22
         plt.rcParams['axes.labelsize'] = 20
 
-        # 调整整体布局，为底部标题留出空间
+        plt.figure(figsize=(36, 24))  # 调整尺寸以适应PDF
+        # 调整整体布局
         plt.subplots_adjust(left=0.07, right=0.93, bottom=0.1, top=0.95, hspace=0.35, wspace=0.15)
 
         # 1. 检测准确率
@@ -149,10 +152,10 @@ class SignatureVerificationExperiment:
         plt.plot(self.results['false_negative_rate'], 'g-.s', lw=2, ms=8, label='False Negative Rate')
         ax1.set_xlabel('Round', fontsize=20)
         ax1.set_ylabel('Rate', fontsize=20)
-        ax1.legend()
+        ax1.legend(prop={'family': 'Times New Roman'})
         ax1.grid(True)
         ax1.set_ylim(-0.05, 1.05)
-        ax1.set_title('(a) Signature Verification Performance', y=-0.15, fontsize=22)
+        ax1.set_title('(a) Signature Verification Performance', y=-0.15, fontsize=22, fontweight='bold')
 
         # 2. 信任评分差异
         ax2 = plt.subplot(2, 2, 2)
@@ -160,7 +163,7 @@ class SignatureVerificationExperiment:
         ax2.set_xlabel('Round', fontsize=20)
         ax2.set_ylabel('Trust Score Difference', fontsize=20)
         ax2.grid(True)
-        ax2.set_title('(b) Trust Score Difference (Normal vs Malicious)', y=-0.15, fontsize=22)
+        ax2.set_title('(b) Trust Score Difference (Normal vs Malicious)', y=-0.15, fontsize=22, fontweight='bold')
 
         # 3. 恶意行为检测
         ax3 = plt.subplot(2, 2, 3)
@@ -170,9 +173,9 @@ class SignatureVerificationExperiment:
         plt.plot(malicious_count, 'b--', lw=3, label='Actual Malicious')
         ax3.set_xlabel('Round', fontsize=20)
         ax3.set_ylabel('Count', fontsize=20)
-        ax3.legend()
+        ax3.legend(prop={'family': 'Times New Roman'})
         ax3.grid(True)
-        ax3.set_title('(c) Malicious Behavior Detection', y=-0.15, fontsize=22)
+        ax3.set_title('(c) Malicious Behavior Detection', y=-0.15, fontsize=22, fontweight='bold')
 
         # 4. 行为画像示例
         ax4 = plt.subplot(2, 2, 4)
@@ -186,34 +189,40 @@ class SignatureVerificationExperiment:
         normal_profile_normalized = normal_profile / np.sum(normal_profile)
         malicious_profile_normalized = malicious_profile / np.sum(malicious_profile)
 
-        bar_width = 0.2
+        bar_width = 0.25
         x = np.arange(3)
         rects1 = ax4.bar(x - bar_width / 2, normal_profile_normalized,
-                         width=bar_width, label=f'Normal User {normal_user}')
+                         width=bar_width, label=f'Normal User {normal_user}',
+                         color='skyblue', edgecolor='black')
         rects2 = ax4.bar(x + bar_width / 2, malicious_profile_normalized,
-                         width=bar_width, label=f'Malicious User {malicious_user}')
+                         width=bar_width, label=f'Malicious User {malicious_user}',
+                         color='salmon', edgecolor='black')
 
         ax4.set_xticks(x)
-        ax4.set_xticklabels(['Sign Count', 'Verify Success', 'Verify Fail'])
+        ax4.set_xticklabels(['Sign Count', 'Verify Success', 'Verify Fail'], fontsize=18)
         ax4.set_ylabel('Proportion', fontsize=20)
-        ax4.legend()
+        ax4.legend(prop={'family': 'Times New Roman'})
         ax4.grid(True, axis='y')
-        ax4.set_ylim(0, max(max(normal_profile_normalized), max(malicious_profile_normalized)) * 1.15)
+        max_val = max(max(normal_profile_normalized), max(malicious_profile_normalized))
+        ax4.set_ylim(0, max_val * 1.25)
 
         # 添加柱状图数值标签
         for rect in rects1:
             height = rect.get_height()
-            ax4.text(rect.get_x() + rect.get_width() / 2, height,
-                     f'{height:.2f}', ha='center', va='bottom', fontsize=16)
+            ax4.text(rect.get_x() + rect.get_width() / 2, height + 0.02,
+                     f'{height:.2f}', ha='center', va='bottom',
+                     fontsize=16, family='Times New Roman', fontweight='bold')
 
         for rect in rects2:
             height = rect.get_height()
-            ax4.text(rect.get_x() + rect.get_width() / 2, height,
-                     f'{height:.2f}', ha='center', va='bottom', fontsize=16)
+            ax4.text(rect.get_x() + rect.get_width() / 2, height + 0.02,
+                     f'{height:.2f}', ha='center', va='bottom',
+                     fontsize=16, family='Times New Roman', fontweight='bold')
 
-        ax4.set_title('(d) Behavior Profiles (Normalized)', y=-0.15, fontsize=22)
+        ax4.set_title('(d) Behavior Profiles (Normalized)', y=-0.15, fontsize=22, fontweight='bold')
 
-        plt.savefig('signature_verification_results.png', bbox_inches='tight')
+        # 保存为PDF矢量图
+        plt.savefig('signature_verification_results.pdf', dpi=300, bbox_inches='tight')
         plt.show()
 
     def run_detailed_analysis(self):
@@ -267,8 +276,8 @@ if __name__ == "__main__":
     print("Starting Signature Verification Experiment...")
     experiment = SignatureVerificationExperiment(
         num_users=100,
-        malicious_ratio=0.2,
-        num_rounds=50
+        malicious_ratio=0.05,
+        num_rounds=100
     )
 
     # 运行主实验

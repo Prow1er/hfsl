@@ -8,6 +8,7 @@ from channel_simulator import ChannelSimulator
 from hsfl_new import HSFLTrainer
 from secure_selector import PKIManager, SecureMABSelector
 from ue_selection_new import MABSelector, calculate_delta_norms
+from experiment import main
 
 
 class ExperimentRunner:
@@ -174,54 +175,55 @@ class ExperimentRunner:
 
 
 if __name__ == "__main__":
-    config0 = {
-        'rounds': 100,
-        'k': 10,
-        'model_type': 'Net',
-        'selection_scheme': 'secure',
-        'data_dist': 'noniid',
-        'static_ue': False  # 是否使用静态用户设备位置
-    }
+    # config0 = {
+    #     'rounds': 100,
+    #     'k': 10,
+    #     'model_type': 'Net',
+    #     'selection_scheme': 'secure',
+    #     'data_dist': 'noniid',
+    #     'static_ue': False  # 是否使用静态用户设备位置
+    # }
+    #
+    # runner = ExperimentRunner(config0)
+    # results = runner.run()
+    # torch.save(results, 'secure_hsfl_results.pt')
 
-    runner = ExperimentRunner(config0)
-    results = runner.run()
-    torch.save(results, 'secure_hsfl_results0.pt')
+    # config1 = {
+    #     'rounds': 100,
+    #     'k': 10,
+    #     'model_type': 'AlexNet',
+    #     'selection_scheme': 'secure',
+    #     'data_dist': 'iid',
+    #     'static_ue': False  # 是否使用静态用户设备位置
+    # }
+    #
+    # runner = ExperimentRunner(config1)
+    # results = runner.run()
+    # torch.save(results, 'secure_hsfl_results.pt')
 
-    config1 = {
-        'rounds': 100,
-        'k': 10,
-        'model_type': 'AlexNet',
-        'selection_scheme': 'secure',
-        'data_dist': 'noniid',
-        'static_ue': False  # 是否使用静态用户设备位置
-    }
-
-    runner = ExperimentRunner(config1)
-    results = runner.run()
-    torch.save(results, 'secure_hsfl_results1.pt')
-
-    config2 = {
-        'rounds': 100,
-        'k': 10,
-        'model_type': 'Net',
-        'selection_scheme': 'secure',
-        'data_dist': 'iid',
-        'static_ue': False  # 是否使用静态用户设备位置
-    }
-
-    runner = ExperimentRunner(config2)
-    results = runner.run()
-    torch.save(results, 'secure_hsfl_results2.pt')
+    # config2 = {
+    #     'rounds': 100,
+    #     'k': 10,
+    #     'model_type': 'Net',
+    #     'selection_scheme': 'secure',
+    #     'data_dist': 'iid',
+    #     'static_ue': False  # 是否使用静态用户设备位置
+    # }
+    #
+    # runner = ExperimentRunner(config2)
+    # results = runner.run()
+    # torch.save(results, 'secure_hsfl_results2.pt')
 
     config3 = {
         'rounds': 100,
         'k': 10,
         'model_type': 'AlexNet',
         'selection_scheme': 'secure',
-        'data_dist': 'iid',
+        'data_dist': 'noniid',
         'static_ue': False  # 是否使用静态用户设备位置
     }
 
     runner = ExperimentRunner(config3)
     results = runner.run()
     torch.save(results, 'secure_hsfl_results3.pt')
+
